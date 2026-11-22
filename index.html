@@ -1,5 +1,10 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F1B17">
 <title>Nomi Growth Studio</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Nomi Growth Studio sets up lead follow-up systems for real estate agencies: instant replies, WhatsApp alerts and automatic follow-ups, running in your own Google account.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -220,6 +225,26 @@ section[id] { scroll-margin-top: 84px; }
 .pill.viewing { background: var(--jade-soft); color: var(--jade); }
 .pill.won { background: var(--jade); color: var(--jade-ink); }
 .sheet-note { margin: 10px 0 0; font: 400 .75rem/1.5 var(--f-mono); color: var(--muted); }
+.app { border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: 0 28px 60px -34px rgba(15,27,23,.45); overflow: hidden; }
+.app-bar { display: flex; align-items: center; gap: 14px; padding: 12px 16px; background: var(--surface-2); border-bottom: 1px solid var(--line); }
+.app-dots { display: flex; gap: 6px; }
+.app-dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+.app-title { flex: 1; font: 500 .8125rem/1 var(--f-body); color: var(--muted); }
+.app-tabs { display: flex; gap: 4px; padding: 10px 16px 0; background: var(--surface-2); border-bottom: 1px solid var(--line); overflow-x: auto; }
+.app-tabs span { padding: 10px 18px; font: 600 .8125rem/1 var(--f-body); color: var(--muted); border-radius: 10px 10px 0 0; white-space: nowrap; }
+.app-tabs span.on { background: var(--surface); color: var(--ink); box-shadow: inset 0 3px 0 var(--sun); }
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; padding: 20px 16px 6px; }
+.kpi { background: var(--surface-2); border: 1px solid var(--line); border-top: 3px solid var(--sun); border-radius: 12px; padding: 14px 16px; }
+.kpi small { display: block; font: 600 .6875rem/1 var(--f-mono); letter-spacing: .06em; color: var(--muted); text-transform: uppercase; }
+.kpi b { display: block; font: 800 2rem/1.1 var(--f-display); margin: 10px 0 6px; letter-spacing: -.02em; }
+.kpi em { font: 500 .75rem/1 var(--f-body); color: var(--jade); font-style: normal; }
+.app-sub { margin: 16px 16px 0; font: 600 .75rem/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.app .sheet-wrap { border: 0; border-radius: 0; margin-top: 10px; border-top: 1px solid var(--line); }
+.sheet tr.fresh td { background: var(--sun-soft); animation: fresh 2.4s ease-out 1; }
+.sheet tr.fresh .rn { background: var(--sun-soft); }
+.ping { display: inline-block; margin-left: 8px; font: 600 .6875rem/1 var(--f-mono); color: var(--sun); letter-spacing: .04em; }
+@keyframes fresh { from { background: var(--sun); } to { background: var(--sun-soft); } }
+@media (max-width: 720px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } .kpi b { font-size: 1.6rem; } }
 .demo-offer { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; margin-top: 52px; align-items: start; }
 .demo-offer h3 { font-size: 1.5rem; font-weight: 700; letter-spacing: -.015em; margin: 0 0 10px; }
 .demo-offer > div > p { color: var(--muted); margin: 0; }
@@ -350,6 +375,8 @@ details p { color: var(--muted); margin: 12px 0 0; max-width: 68ch; font-size: .
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 </style>
+</head>
+<body>
 
 <header class="top">
   <div class="wrap nav">
@@ -450,20 +477,36 @@ details p { color: var(--muted); margin: 12px 0 0; max-width: 68ch; font-size: .
         <p>Agents change one thing: the Status. The system handles the replies, reminders and follow-ups.</p>
       </div>
 
+      <div class="app">
+      <div class="app-bar">
+        <span class="app-dots"><i></i><i></i><i></i></span>
+        <span class="app-title">Your agency · Lead System</span>
+        <span class="live"><i></i>Updating itself</span>
+      </div>
+      <div class="app-tabs"><span class="on">Dashboard</span><span>Leads</span><span>Settings</span><span>Log</span></div>
+      <div class="kpis">
+        <div class="kpi"><small>New this week</small><b>18</b><em>3 arrived today</em></div>
+        <div class="kpi"><small>Waiting</small><b>4</b><em>agents alerted</em></div>
+        <div class="kpi"><small>Viewings booked</small><b>6</b><em>follow-ups stopped</em></div>
+        <div class="kpi"><small>Deals won</small><b>2</b><em>this month</em></div>
+      </div>
+      <p class="app-sub">Latest leads</p>
       <div class="sheet-wrap">
         <table class="sheet">
           <thead>
             <tr><th class="rn"></th><th>Received</th><th>Name</th><th>Interest</th><th>Source</th><th>Status</th><th>Follow-ups</th></tr>
           </thead>
           <tbody>
-            <tr><td class="rn">2</td><td class="mono">16 Nov 09:12</td><td>Ahmed R.</td><td>10 marla house, DHA Phase 6</td><td>Website</td><td><span class="pill new">New</span></td><td class="mono">0 of 3</td></tr>
-            <tr><td class="rn">3</td><td class="mono">15 Nov 18:40</td><td>Sara K.</td><td>2 bed apartment, Dubai Marina</td><td>Bayut alert</td><td><span class="pill contacted">Contacted</span></td><td class="mono">1 of 3</td></tr>
-            <tr><td class="rn">4</td><td class="mono">14 Nov 11:05</td><td>Bilal M.</td><td>1 kanal plot, Bahria Town</td><td>Zameen alert</td><td><span class="pill viewing">Viewing booked</span></td><td class="mono">stopped</td></tr>
-            <tr><td class="rn">5</td><td class="mono">12 Nov 16:22</td><td>Fatima Z.</td><td>Shop for rent, Gulberg</td><td>Website</td><td><span class="pill won">Closed won</span></td><td class="mono">stopped</td></tr>
+            <tr class="fresh"><td class="rn">2</td><td class="mono">Just now<span class="ping">NEW</span></td><td>Hamza T.</td><td>3 bed flat, Gulshan</td><td>Website</td><td><span class="pill new">New</span></td><td class="mono">reply sent</td></tr>
+            <tr><td class="rn">3</td><td class="mono">16 Nov 09:12</td><td>Ahmed R.</td><td>10 marla house, DHA Phase 6</td><td>Website</td><td><span class="pill new">New</span></td><td class="mono">0 of 3</td></tr>
+            <tr><td class="rn">4</td><td class="mono">15 Nov 18:40</td><td>Sara K.</td><td>2 bed apartment, Dubai Marina</td><td>Bayut alert</td><td><span class="pill contacted">Contacted</span></td><td class="mono">1 of 3</td></tr>
+            <tr><td class="rn">5</td><td class="mono">14 Nov 11:05</td><td>Bilal M.</td><td>1 kanal plot, Bahria Town</td><td>Zameen alert</td><td><span class="pill viewing">Viewing booked</span></td><td class="mono">stopped</td></tr>
+            <tr><td class="rn">6</td><td class="mono">12 Nov 16:22</td><td>Fatima Z.</td><td>Shop for rent, Gulberg</td><td>Website</td><td><span class="pill won">Closed won</span></td><td class="mono">stopped</td></tr>
           </tbody>
         </table>
       </div>
-      <p class="sheet-note">Example data. Names are not real clients.</p>
+      </div>
+      <p class="sheet-note">Example data. Names and numbers are not real clients.</p>
 
       <div class="demo-offer">
         <div>
@@ -710,3 +753,5 @@ details p { color: var(--muted); margin: 12px 0 0; max-width: 68ch; font-size: .
   if (yr) yr.textContent = new Date().getFullYear();
 })();
 </script>
+</body>
+</html>
