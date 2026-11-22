@@ -1,0 +1,712 @@
+<title>Nomi Growth Studio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Nomi Growth Studio sets up lead follow-up systems for real estate agencies: instant replies, WhatsApp alerts and automatic follow-ups, running in your own Google account.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  /* Layout: a workflow canvas. The page runs top to bottom like a pipeline; node rows and a live lead sheet are the recurring motifs. */
+  --bg: #F2F5F3;
+  --surface: #FFFFFF;
+  --surface-2: #E7EDEA;
+  --ink: #0F1B17;
+  --muted: #50625B;
+  --line: #D2DCD7;
+  --jade: #087A5F;
+  --jade-ink: #FFFFFF;
+  --jade-soft: #D9EFE7;
+  --sun: #E09A16;
+  --sun-soft: #FAEDD2;
+  --on-sun: #1B1405;
+  --band: #0F1B17;
+  --on-band: #EAF2EE;
+  --on-band-muted: #A9BCB5;
+  --band-line: #2A3B35;
+  --f-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --r: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0C1311; --surface: #131D1A; --surface-2: #19251F; --ink: #E5EEEA; --muted: #95A8A1;
+    --line: #24342F; --jade: #3CCB9F; --jade-ink: #052019; --jade-soft: #123129;
+    --sun: #F0B53F; --sun-soft: #33280F; --band: #15302A; --band-line: #2A4A41;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0C1311; --surface: #131D1A; --surface-2: #19251F; --ink: #E5EEEA; --muted: #95A8A1;
+  --line: #24342F; --jade: #3CCB9F; --jade-ink: #052019; --jade-soft: #123129;
+  --sun: #F0B53F; --sun-soft: #33280F; --band: #15302A; --band-line: #2A4A41;
+  color-scheme: dark;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 1.0625rem; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 30; background: var(--bg);
+}
+.wrap {
+  max-width: 1160px; margin-inline: auto;
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
+}
+a { color: inherit; }
+h1, h2, h3, h4 { font-family: var(--f-display); text-wrap: balance; }
+section[id] { scroll-margin-top: 84px; }
+.eyebrow {
+  font-family: var(--f-mono); font-size: .8125rem; font-weight: 500;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--jade); margin: 0;
+}
+:where(a, button, summary):focus-visible { outline: 2px solid var(--sun); outline-offset: 3px; border-radius: 6px; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 20px; border-radius: 999px; border: 1px solid var(--jade);
+  background: var(--jade); color: var(--jade-ink);
+  font: 600 .9375rem/1.2 var(--f-body); text-decoration: none; cursor: pointer;
+  transition: transform .15s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn.ghost:hover { border-color: var(--ink); }
+.btn.sun { background: var(--sun); color: var(--on-sun); border-color: var(--sun); }
+
+/* Header */
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.nav { display: flex; align-items: center; gap: 28px; min-height: 66px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+.brand svg { flex: none; }
+.brand .n-a { fill: none; stroke: currentColor; stroke-width: 2; }
+.brand .n-b { fill: var(--jade); }
+.brand .n-l { stroke: currentColor; stroke-width: 2; }
+.brand b { font: 800 1.5rem/1 var(--f-display); letter-spacing: -.04em; }
+.brand small {
+  font: 500 .6875rem/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted); padding-left: 10px; border-left: 1px solid var(--line);
+}
+.links { display: flex; gap: 24px; margin-left: auto; }
+.links a { color: var(--muted); text-decoration: none; font-size: .9375rem; font-weight: 500; }
+.links a:hover { color: var(--ink); }
+@media (max-width: 880px) {
+  .links { display: none; }
+  .nav .btn { margin-left: auto; padding: 10px 16px; }
+}
+@media (max-width: 420px) { .brand small { display: none; } }
+
+/* Hero */
+.hero { padding-block: 72px 64px; }
+.hero-grid {
+  display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr);
+  gap: 56px; align-items: center;
+}
+.hero h1 {
+  font-weight: 800; font-size: clamp(2.5rem, 5.4vw, 4.3rem); line-height: 1.02;
+  letter-spacing: -.035em; margin: 16px 0 22px;
+}
+.hero h1 em { font-style: normal; color: var(--jade); }
+.lede { font-size: 1.1875rem; color: var(--muted); max-width: 56ch; margin: 0; }
+.hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+.hero-meta {
+  display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 30px 0 0; padding: 0; list-style: none;
+  font: 400 .8125rem/1.4 var(--f-mono); color: var(--muted);
+}
+.hero-meta li { display: flex; align-items: center; gap: 8px; }
+.hero-meta li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--jade); }
+@media (max-width: 920px) { .hero-grid { grid-template-columns: 1fr; gap: 44px; } .hero { padding-block: 48px 56px; } }
+
+/* Hero workflow card */
+.flow {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 20px 22px;
+  box-shadow: 0 30px 60px -36px color-mix(in srgb, var(--ink) 45%, transparent);
+}
+.flow-head, .flow-foot {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
+  font: 500 .75rem/1.4 var(--f-mono); letter-spacing: .05em; text-transform: uppercase; color: var(--muted);
+}
+.flow-head { padding-bottom: 14px; border-bottom: 1px dashed var(--line); }
+.flow-foot { padding-top: 14px; border-top: 1px dashed var(--line); margin-top: 4px; }
+.flow-foot strong { color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; }
+.live { display: inline-flex; align-items: center; gap: 7px; color: var(--jade); }
+.live i { width: 8px; height: 8px; border-radius: 50%; background: var(--jade); animation: blink 1.6s ease-in-out infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.steps { list-style: none; margin: 4px 0 0; padding: 0; position: relative; }
+.steps::before {
+  content: ""; position: absolute; left: 62px; top: 26px; bottom: 26px; width: 2px; background: var(--line);
+}
+.steps li {
+  display: grid; grid-template-columns: 44px 14px minmax(0, 1fr) auto; gap: 12px;
+  align-items: start; padding-block: 12px;
+}
+.steps .t { font: 400 .75rem/1.6 var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; padding-top: 2px; white-space: nowrap; }
+.steps .dot {
+  width: 14px; height: 14px; border-radius: 50%; margin-top: 4px; position: relative; z-index: 1;
+  background: var(--jade); border: 2px solid var(--jade);
+  animation: node 7.2s ease-in-out infinite; animation-delay: calc(var(--i) * 1.2s);
+}
+@keyframes node {
+  0%, 14% { background: var(--sun); border-color: var(--sun); box-shadow: 0 0 0 6px var(--sun-soft); }
+  24%, 100% { background: var(--jade); border-color: var(--jade); box-shadow: 0 0 0 0 transparent; }
+}
+.steps b { display: block; font-weight: 600; font-size: 1rem; line-height: 1.35; }
+.steps small { display: block; color: var(--muted); font-size: .8125rem; line-height: 1.45; margin-top: 2px; }
+.chip {
+  font: 500 .6875rem/1 var(--f-mono); padding: 5px 8px; border-radius: 999px; margin-top: 2px;
+  background: var(--surface-2); color: var(--muted); white-space: nowrap;
+}
+.chip.ok { background: var(--jade-soft); color: var(--jade); }
+@media (max-width: 480px) {
+  .steps li { grid-template-columns: 44px 14px minmax(0, 1fr); }
+  .steps .chip { display: none; }
+  .flow { padding: 18px 16px; }
+}
+
+/* Tools band */
+.tools { border-block: 1px solid var(--line); background: var(--surface-2); }
+.tools .wrap { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 18px; padding-block: 20px; }
+.tools p { margin: 0; font: 500 .75rem/1.5 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.tools ul { display: flex; flex-wrap: wrap; gap: 6px 18px; list-style: none; margin: 0; padding: 0; font-weight: 500; font-size: .9375rem; }
+
+/* Sections */
+.sec { padding-block: 92px; }
+.sec + .sec { border-top: 1px solid var(--line); }
+.sec-head {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px 56px;
+  align-items: end; margin-bottom: 48px;
+}
+.sec-head h2 { font-weight: 700; font-size: clamp(2rem, 3.8vw, 3.1rem); line-height: 1.04; letter-spacing: -.03em; margin: 12px 0 0; }
+.sec-head > p { color: var(--muted); margin: 0; max-width: 54ch; }
+@media (max-width: 820px) { .sec-head { grid-template-columns: 1fr; margin-bottom: 36px; } .sec { padding-block: 68px; } }
+
+/* Features */
+.features { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; list-style: none; margin: 0; padding: 0; }
+.feat {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r);
+  padding: 22px; display: flex; flex-direction: column; gap: 8px; min-width: 0;
+}
+.feat h3 { display: flex; align-items: center; gap: 10px; font-size: 1.1875rem; font-weight: 700; letter-spacing: -.01em; margin: 0; line-height: 1.25; }
+.feat h3::before { content: ""; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--jade); flex: none; }
+.feat p { margin: 0; color: var(--muted); font-size: .9375rem; }
+@media (max-width: 900px) { .features { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .features { grid-template-columns: 1fr; } }
+
+/* Lead sheet mock */
+.sheet-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+.sheet { width: 100%; min-width: 760px; border-collapse: collapse; font-size: .9rem; }
+.sheet th {
+  text-align: left; font: 500 .6875rem/1.2 var(--f-mono); text-transform: uppercase; letter-spacing: .06em;
+  color: var(--muted); background: var(--surface-2); padding: 11px 14px; border-bottom: 1px solid var(--line); white-space: nowrap;
+}
+.sheet td { padding: 13px 14px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.sheet tr:last-child td { border-bottom: 0; }
+.sheet .rn { width: 36px; text-align: right; color: var(--muted); font: 400 .75rem/1 var(--f-mono); background: var(--surface-2); border-right: 1px solid var(--line); }
+.sheet .mono { font-family: var(--f-mono); font-size: .8125rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.pill { display: inline-block; font: 600 .75rem/1 var(--f-body); padding: 6px 10px; border-radius: 999px; }
+.pill.new { background: var(--sun-soft); color: var(--ink); }
+.pill.contacted { background: var(--surface-2); color: var(--ink); }
+.pill.viewing { background: var(--jade-soft); color: var(--jade); }
+.pill.won { background: var(--jade); color: var(--jade-ink); }
+.sheet-note { margin: 10px 0 0; font: 400 .75rem/1.5 var(--f-mono); color: var(--muted); }
+.demo-offer { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; margin-top: 52px; align-items: start; }
+.demo-offer h3 { font-size: 1.5rem; font-weight: 700; letter-spacing: -.015em; margin: 0 0 10px; }
+.demo-offer > div > p { color: var(--muted); margin: 0; }
+.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.checks li { display: flex; gap: 12px; align-items: flex-start; }
+.checks li::before {
+  content: "✓"; flex: none; width: 24px; height: 24px; border-radius: 50%;
+  display: grid; place-items: center; font-size: .75rem; font-weight: 700;
+  background: var(--jade-soft); color: var(--jade);
+}
+@media (max-width: 820px) { .demo-offer { grid-template-columns: 1fr; gap: 24px; } }
+
+/* Process */
+.process { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; list-style: none; margin: 0; padding: 0; counter-reset: step; }
+.process li { position: relative; padding-top: 48px; }
+.process li::before {
+  counter-increment: step; content: counter(step, decimal-leading-zero);
+  position: absolute; top: 0; left: 0; font: 500 .8125rem/1 var(--f-mono);
+  padding: 8px 12px; border-radius: 999px; background: var(--jade-soft); color: var(--jade);
+}
+.process li::after {
+  content: ""; position: absolute; top: 15px; left: 58px; right: -14px; height: 2px; background: var(--line);
+}
+.process li:last-child::after { display: none; }
+.process .when { font: 400 .75rem/1.4 var(--f-mono); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.process h3 { font-size: 1.25rem; font-weight: 700; letter-spacing: -.01em; margin: 6px 0 8px; }
+.process p { margin: 0; color: var(--muted); font-size: .9375rem; }
+@media (max-width: 900px) {
+  .process { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 36px; }
+  .process li::after { display: none; }
+}
+@media (max-width: 520px) { .process { grid-template-columns: 1fr; } }
+
+/* Pricing */
+.plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.plan {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+  padding: 26px; display: flex; flex-direction: column; gap: 14px; min-width: 0;
+}
+.plan.featured { border: 2px solid var(--jade); padding: 25px; }
+.plan-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.plan h3 { font-size: 1.3125rem; font-weight: 700; margin: 0; }
+.badge { font: 500 .6875rem/1 var(--f-mono); text-transform: uppercase; letter-spacing: .06em; padding: 6px 9px; border-radius: 999px; background: var(--sun-soft); color: var(--ink); }
+.plan .for { margin: 0; color: var(--muted); font-size: .9375rem; }
+.price { font: 700 2.5rem/1 var(--f-display); letter-spacing: -.03em; font-variant-numeric: tabular-nums; margin: 4px 0; }
+.price small { font: 400 .9375rem/1 var(--f-body); color: var(--muted); letter-spacing: 0; }
+.ticks { list-style: none; padding: 0; margin: 4px 0 10px; display: grid; gap: 8px; font-size: .9rem; line-height: 1.45; }
+.ticks li { display: flex; gap: 10px; }
+.ticks li::before {
+  content: ""; width: 6px; height: 6px; border-radius: 50%; border: 1.5px solid var(--jade);
+  margin-top: .5em; flex: none;
+}
+.plan .btn { margin-top: auto; }
+@media (max-width: 920px) { .plans { grid-template-columns: 1fr; } }
+
+.rates { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.3fr); gap: 48px; margin-top: 56px; }
+.rates h3 { font-size: 1.5rem; font-weight: 700; letter-spacing: -.015em; margin: 0 0 10px; }
+.rates > div > p { color: var(--muted); margin: 0 0 16px; font-size: .9375rem; }
+.terms { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; font-size: .9375rem; }
+.terms li { display: flex; gap: 10px; }
+.terms b { font-weight: 600; min-width: 92px; }
+.rate-list { margin: 0; }
+.rate-row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding-block: 13px; border-bottom: 1px dashed var(--line); }
+.rate-row:first-child { border-top: 1px dashed var(--line); }
+.rate-row dt { font-weight: 500; }
+.rate-row dd { margin: 0; font: 500 .9375rem/1.4 var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.rate-row dd small { color: var(--muted); font-weight: 400; }
+.offer {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin-top: 40px;
+  padding: 18px 22px; border-radius: var(--r); background: var(--sun-soft); color: var(--ink);
+}
+.offer strong { font: 500 .75rem/1.4 var(--f-mono); text-transform: uppercase; letter-spacing: .08em; }
+@media (max-width: 860px) { .rates { grid-template-columns: 1fr; gap: 28px; } }
+
+/* Why */
+.why { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; list-style: none; margin: 0; padding: 0; }
+.why li { display: flex; flex-direction: column; gap: 8px; padding-top: 20px; border-top: 2px solid var(--ink); }
+.why h3 { font-size: 1.1875rem; font-weight: 700; margin: 0; letter-spacing: -.01em; }
+.why p { margin: 0; color: var(--muted); font-size: .9375rem; }
+@media (max-width: 920px) { .why { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .why { grid-template-columns: 1fr; } }
+
+/* FAQ */
+.faq-grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 56px; }
+.faq-grid .sec-head { display: block; margin: 0; }
+.faq-grid .sec-head p { margin-top: 16px; }
+details { border-top: 1px solid var(--line); padding-block: 18px; }
+details:last-child { border-bottom: 1px solid var(--line); }
+summary {
+  cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 18px;
+  font-weight: 600; font-size: 1.0625rem; line-height: 1.4;
+}
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; font: 500 1.25rem/1 var(--f-mono); color: var(--jade); flex: none; }
+details[open] summary::after { content: "−"; }
+details p { color: var(--muted); margin: 12px 0 0; max-width: 68ch; font-size: .9875rem; }
+@media (max-width: 860px) { .faq-grid { grid-template-columns: 1fr; gap: 28px; } }
+
+/* Contact band */
+.contact { background: var(--band); color: var(--on-band); }
+.contact .wrap { padding-block: 88px; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 56px; align-items: center; }
+.contact .eyebrow { color: var(--sun); }
+.contact h2 { font-weight: 800; font-size: clamp(2.1rem, 4.4vw, 3.5rem); line-height: 1.02; letter-spacing: -.035em; margin: 14px 0 18px; }
+.contact p { color: var(--on-band-muted); margin: 0; max-width: 52ch; }
+.c-card { border: 1px solid var(--band-line); border-radius: 18px; padding: 8px 22px 22px; }
+.c-row { display: grid; grid-template-columns: 96px minmax(0, 1fr) auto; gap: 14px; align-items: center; padding-block: 16px; border-bottom: 1px solid var(--band-line); }
+.c-row .lbl { font: 500 .75rem/1.4 var(--f-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--on-band-muted); }
+.c-val { font-weight: 600; overflow-wrap: anywhere; user-select: all; }
+.c-val.pending { color: var(--on-band-muted); font-weight: 400; font-style: italic; user-select: auto; }
+.copy {
+  font: 500 .75rem/1 var(--f-mono); padding: 8px 12px; border-radius: 999px; cursor: pointer;
+  background: transparent; color: var(--on-band); border: 1px solid var(--band-line);
+}
+.copy:hover { border-color: var(--on-band-muted); }
+.c-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+.c-card .fine { margin: 16px 0 0; font-size: .8125rem; }
+@media (max-width: 880px) { .contact .wrap { grid-template-columns: 1fr; gap: 36px; padding-block: 64px; } }
+@media (max-width: 420px) { .c-row { grid-template-columns: minmax(0, 1fr) auto; } .c-row .lbl { grid-column: 1 / -1; } }
+
+/* Footer */
+.foot .wrap {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; padding-block: 28px;
+  font: 400 .8125rem/1.5 var(--f-mono); color: var(--muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+
+<header class="top">
+  <div class="wrap nav">
+    <a class="brand" href="#top" aria-label="Nomi Growth Studio home">
+      <svg width="30" height="16" viewBox="0 0 30 16" aria-hidden="true">
+        <circle class="n-a" cx="6" cy="8" r="4.5"></circle>
+        <line class="n-l" x1="10.5" y1="8" x2="19.5" y2="8"></line>
+        <circle class="n-b" cx="24" cy="8" r="5.5"></circle>
+      </svg>
+      <b>nomi</b>
+      <small>Growth Studio</small>
+    </a>
+    <nav class="links" aria-label="Main">
+      <a href="#how">How it works</a>
+      <a href="#demo">Demo</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn" href="#contact">Get a free demo</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Lead follow-up for real estate agencies</p>
+        <h1>Answer every property enquiry <em>in under a minute.</em></h1>
+        <p class="lede">Agents are out on viewings. Enquiries pile up in three inboxes. By the time someone calls back, the buyer has spoken to another agency. Nomi sets up a lead system that replies instantly, alerts your agents on WhatsApp and follows up until every lead is handled.</p>
+        <div class="hero-cta">
+          <a class="btn" href="#contact">Get a free demo</a>
+          <a class="btn ghost" href="#how">See how it works</a>
+        </div>
+        <ul class="hero-meta">
+          <li>Runs in your own Google account</li>
+          <li>No monthly software fees</li>
+          <li>Free demo before you pay</li>
+        </ul>
+      </div>
+
+      <div class="flow" role="img" aria-label="Example: a website enquiry is saved to the lead sheet, the buyer gets an instant reply, the agent gets a WhatsApp alert, and follow-ups run on day 1, 3 and 7.">
+        <div class="flow-head">
+          <span>Example run · website enquiry</span>
+          <span class="live"><i></i>Automated</span>
+        </div>
+        <ol class="steps">
+          <li style="--i:0"><span class="t">00:00</span><span class="dot"></span><div><b>New enquiry on your website</b><small>"Is the 10 marla in DHA Phase 6 available?"</small></div><span class="chip">trigger</span></li>
+          <li style="--i:1"><span class="t">00:02</span><span class="dot"></span><div><b>Saved to your lead sheet</b><small>Name, phone, budget and source</small></div><span class="chip">Sheet</span></li>
+          <li style="--i:2"><span class="t">00:03</span><span class="dot"></span><div><b>Instant reply to the buyer</b><small>Confirms an agent will call shortly</small></div><span class="chip">email</span></li>
+          <li style="--i:3"><span class="t">00:03</span><span class="dot"></span><div><b>Agent alerted on their phone</b><small>One tap opens the buyer's WhatsApp</small></div><span class="chip">WhatsApp</span></li>
+          <li style="--i:4"><span class="t">Day 1</span><span class="dot"></span><div><b>Follow-ups on day 1, 3 and 7</b><small>Until the lead is marked contacted</small></div><span class="chip ok">auto</span></li>
+        </ol>
+        <div class="flow-foot">
+          <span>Enquiry to agent alert</span>
+          <strong>3 seconds</strong>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="tools">
+    <div class="wrap">
+      <p>Works with</p>
+      <ul>
+        <li>Your website forms</li><li>Zameen, Bayut and Property Finder email alerts</li>
+        <li>Google Sheets</li><li>Gmail</li><li>WhatsApp</li>
+      </ul>
+    </div>
+  </div>
+
+  <section class="sec" id="how">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">How it works</p>
+          <h2>One system from enquiry to viewing.</h2>
+        </div>
+        <p>Everything runs inside your own Google account: Sheets holds the lead list, Gmail sends the emails, and a small automation script does the rest. You keep full control, and we keep no copy of your data.</p>
+      </div>
+      <ul class="features">
+        <li class="feat"><h3>One lead sheet</h3><p>Website and portal enquiries land in one Google Sheet with name, phone, budget and source.</p></li>
+        <li class="feat"><h3>Instant reply</h3><p>The buyer gets an email within seconds confirming you received the enquiry.</p></li>
+        <li class="feat"><h3>WhatsApp alerts</h3><p>Agents get an alert with a one-tap WhatsApp button that opens the chat with a greeting already typed.</p></li>
+        <li class="feat"><h3>Automatic follow-ups</h3><p>Follow-ups on day 1, 3 and 7 to the buyer, the agent or both, until the status changes.</p></li>
+        <li class="feat"><h3>Morning summary</h3><p>At 9 am the owner sees new leads, leads nobody has called yet, and follow-ups due today.</p></li>
+        <li class="feat"><h3>Portal capture</h3><p>Lead alert emails from Zameen, Bayut or Property Finder are read and added to the sheet automatically.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec" id="demo">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">See it working</p>
+          <h2>Your lead sheet, kept up to date for you.</h2>
+        </div>
+        <p>Agents change one thing: the Status. The system handles the replies, reminders and follow-ups.</p>
+      </div>
+
+      <div class="sheet-wrap">
+        <table class="sheet">
+          <thead>
+            <tr><th class="rn"></th><th>Received</th><th>Name</th><th>Interest</th><th>Source</th><th>Status</th><th>Follow-ups</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="rn">2</td><td class="mono">16 Nov 09:12</td><td>Ahmed R.</td><td>10 marla house, DHA Phase 6</td><td>Website</td><td><span class="pill new">New</span></td><td class="mono">0 of 3</td></tr>
+            <tr><td class="rn">3</td><td class="mono">15 Nov 18:40</td><td>Sara K.</td><td>2 bed apartment, Dubai Marina</td><td>Bayut alert</td><td><span class="pill contacted">Contacted</span></td><td class="mono">1 of 3</td></tr>
+            <tr><td class="rn">4</td><td class="mono">14 Nov 11:05</td><td>Bilal M.</td><td>1 kanal plot, Bahria Town</td><td>Zameen alert</td><td><span class="pill viewing">Viewing booked</span></td><td class="mono">stopped</td></tr>
+            <tr><td class="rn">5</td><td class="mono">12 Nov 16:22</td><td>Fatima Z.</td><td>Shop for rent, Gulberg</td><td>Website</td><td><span class="pill won">Closed won</span></td><td class="mono">stopped</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="sheet-note">Example data. Names are not real clients.</p>
+
+      <div class="demo-offer">
+        <div>
+          <h3>Free demo in your agency's name</h3>
+          <p>Before you pay anything, we set up a working copy with your agency name and a sample enquiry form. You test it with your own phone and decide.</p>
+        </div>
+        <ul class="checks">
+          <li>A working copy named after your agency</li>
+          <li>Send a test enquiry from your own phone</li>
+          <li>Watch the reply, the WhatsApp alert and the follow-ups arrive</li>
+          <li>Pay only if you want it live</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="process">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Process</p>
+          <h2>From first message to live system.</h2>
+        </div>
+        <p>A clear process, written down. You always know what happens next and what it costs.</p>
+      </div>
+      <ol class="process">
+        <li><span class="when">Day 0</span><h3>Free chat</h3><p>Fifteen minutes by call or WhatsApp. We learn where your leads come from.</p></li>
+        <li><span class="when">Within 48 hours</span><h3>Free demo</h3><p>A working copy in your agency's name. Test it with your own phone.</p></li>
+        <li><span class="when">3 to 5 days</span><h3>Go live</h3><p>We install it in your Google account and connect your website and portal alerts.</p></li>
+        <li><span class="when">30 days</span><h3>Handover and support</h3><p>A short guide, a training call for your team, and 30 days of fixes included.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec" id="pricing">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Pricing</p>
+          <h2>One-time setup. No monthly software fees.</h2>
+        </div>
+        <p>Prices in US dollars; quotes for Pakistan are made in PKR. You pay 50% after you approve the free demo and 50% when the system goes live.</p>
+      </div>
+
+      <div class="plans">
+        <article class="plan">
+          <div class="plan-top"><h3>Lead System</h3></div>
+          <p class="for">For agencies that already have a website or get most leads from portals.</p>
+          <p class="price">$350 <small>one-time</small></p>
+          <ul class="ticks">
+            <li>Lead sheet, instant reply and WhatsApp alerts</li>
+            <li>Follow-ups on day 1, 3 and 7</li>
+            <li>Morning summary and portal email capture</li>
+            <li>Training call and 30 days of support</li>
+          </ul>
+          <a class="btn ghost" href="#contact">Get a free demo</a>
+        </article>
+        <article class="plan featured">
+          <div class="plan-top"><h3>Lead System + Website</h3><span class="badge">Best value</span></div>
+          <p class="for">For agencies with no website, or one that doesn't bring enquiries.</p>
+          <p class="price">$650 <small>one-time</small></p>
+          <ul class="ticks">
+            <li>Everything in Lead System</li>
+            <li>Fast, mobile-friendly website with your listings</li>
+            <li>Enquiry form on every listing</li>
+            <li>Set up on your domain with free hosting</li>
+          </ul>
+          <a class="btn" href="#contact">Get a free demo</a>
+        </article>
+        <article class="plan">
+          <div class="plan-top"><h3>Care plan</h3><span class="badge">Optional</span></div>
+          <p class="for">For agencies that want changes handled for them.</p>
+          <p class="price">$99 <small>/ month</small></p>
+          <ul class="ticks">
+            <li>Monthly health check</li>
+            <li>New agents, forms and message templates added</li>
+            <li>Up to 10 listing updates a month on your website</li>
+            <li>Priority WhatsApp support, cancel any time</li>
+          </ul>
+          <a class="btn ghost" href="#contact">Ask about Care</a>
+        </article>
+      </div>
+
+      <div class="rates">
+        <div>
+          <h3>Add-ons</h3>
+          <p>Added to any setup, with a fixed quote first.</p>
+          <ul class="terms">
+            <li><b>Setup</b><span>50% after the demo, 50% at go-live</span></li>
+            <li><b>Care plan</b><span>Billed monthly, cancel any time</span></li>
+            <li><b>Currencies</b><span>USD, AED, GBP or PKR</span></li>
+            <li><b>Payment</b><span>Bank transfer</span></li>
+          </ul>
+        </div>
+        <dl class="rate-list">
+          <div class="rate-row"><dt>Facebook lead form connection</dt><dd><small>from</small> $100</dd></div>
+          <div class="rate-row"><dt>Google Business Profile and Maps setup</dt><dd><small>from</small> $100</dd></div>
+          <div class="rate-row"><dt>Extra landing page</dt><dd><small>from</small> $150</dd></div>
+          <div class="rate-row"><dt>Message templates in Urdu or Arabic</dt><dd><small>from</small> $50</dd></div>
+        </dl>
+      </div>
+
+      <div class="offer">
+        <strong>Founding client offer</strong>
+        <span>Our first five agencies get 20% off the setup in return for an honest review.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="why">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Why Nomi</p>
+          <h2>What you can count on.</h2>
+        </div>
+      </div>
+      <ul class="why">
+        <li><h3>Your data stays yours</h3><p>Leads live in your Google account. We keep no copy after handover.</p></li>
+        <li><h3>No monthly software fees</h3><p>Google Sheets, Gmail and the script are free within Google's daily limits.</p></li>
+        <li><h3>Free demo first</h3><p>You see it working on your own phone before you pay anything.</p></li>
+        <li><h3>Built for how agents work</h3><p>WhatsApp first, one status column, nothing new to learn.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec" id="faq">
+    <div class="wrap faq-grid">
+      <div class="sec-head">
+        <p class="eyebrow">FAQ</p>
+        <h2>Questions agencies ask first.</h2>
+        <p>Something else on your mind? Ask it in the free chat.</p>
+      </div>
+      <div>
+        <details open>
+          <summary>Do I need to buy any software?</summary>
+          <p>No. It runs on a Google account, which is free. A free Gmail account can send about 100 automated emails a day, and Google Workspace accounts about 1,500, which covers most agencies.</p>
+        </details>
+        <details>
+          <summary>Who owns the system and the leads?</summary>
+          <p>You do. Everything is installed in your Google account. After handover we have no access unless you invite us.</p>
+        </details>
+        <details>
+          <summary>Does it work with Zameen, Bayut and Property Finder?</summary>
+          <p>It reads the lead alert emails these portals send you and adds each enquiry to your sheet. We test it on your real alerts during setup.</p>
+        </details>
+        <details>
+          <summary>Can it send WhatsApp messages by itself?</summary>
+          <p>Your agents get a one-tap WhatsApp link with the message already typed, so the chat starts from their own number. Fully automatic WhatsApp sending needs the paid WhatsApp Business API, which we can add later if you want it.</p>
+        </details>
+        <details>
+          <summary>Do you work outside Pakistan?</summary>
+          <p>Yes. We work with agencies in Pakistan, the UAE and the UK. Messages and calls happen in your time zone.</p>
+        </details>
+        <details>
+          <summary>How do payments work?</summary>
+          <p>50% after you approve the free demo, 50% when the system goes live. Bank transfer in USD, AED, GBP or PKR.</p>
+        </details>
+        <details>
+          <summary>What if something breaks?</summary>
+          <p>Fixes are free for 30 days after go-live. After that, the Care plan covers changes and support, or you can pay per fix.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">Start here</p>
+        <h2>Get a free demo in your agency's name.</h2>
+        <p>Send us your agency name and where your leads come from. We reply within one business day and set up your demo within 48 hours.</p>
+      </div>
+      <div class="c-card">
+        <div class="c-row" data-contact="email">
+          <span class="lbl">Email</span>
+          <span class="c-val"></span>
+          <button class="copy" type="button" id="copy-email">Copy</button>
+        </div>
+        <div class="c-row" data-contact="whatsapp">
+          <span class="lbl">WhatsApp</span>
+          <span class="c-val"></span>
+          <button class="copy" type="button" id="copy-whatsapp">Copy</button>
+        </div>
+        <div class="c-actions">
+          <a class="btn sun" id="wa-link" href="#contact" target="_blank" rel="noopener" hidden>Message us on WhatsApp</a>
+        </div>
+        <p class="fine">Include your website or Facebook page link so we can look before we reply.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <span>© <span id="yr">2026</span> Nomi Growth Studio</span>
+    <span>Lead follow-up systems for real estate agencies</span>
+    <span>Based in Pakistan · working with Pakistan, UAE and UK</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Contact details shown on the page. Fill these in to publish them.
+  var CONFIG = {
+    email: "nomigrowthstudio@gmail.com",
+    whatsapp: ""   // full international number, e.g. "+92 300 1234567"
+  };
+
+  document.querySelectorAll("[data-contact]").forEach(function (row) {
+    var key = row.getAttribute("data-contact");
+    var val = (CONFIG[key] || "").trim();
+    var out = row.querySelector(".c-val");
+    var btn = row.querySelector("button");
+    if (!val) {
+      out.textContent = "Coming soon";
+      out.classList.add("pending");
+      btn.hidden = true;
+      return;
+    }
+    out.textContent = val;
+    btn.addEventListener("click", function () {
+      var reset = function () { setTimeout(function () { btn.textContent = "Copy"; }, 1600); };
+      var selectText = function () {
+        var range = document.createRange();
+        range.selectNodeContents(out);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        btn.textContent = "Selected";
+        reset();
+      };
+      try {
+        navigator.clipboard.writeText(val).then(function () { btn.textContent = "Copied"; reset(); }, selectText);
+      } catch (e) { selectText(); }
+    });
+  });
+
+  var digits = (CONFIG.whatsapp || "").replace(/\D/g, "");
+  var wa = document.getElementById("wa-link");
+  if (digits && wa) { wa.href = "https://wa.me/" + digits; wa.hidden = false; }
+
+  var yr = document.getElementById("yr");
+  if (yr) yr.textContent = new Date().getFullYear();
+})();
+</script>
